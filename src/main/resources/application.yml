@@ -1,0 +1,32 @@
+server: 
+  port: 8080
+spring:
+  application:
+    name: consumer
+  main:
+    allow-bean-definition-overriding: true
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    password:
+#    maxIdle: 300
+#    maxActive: 600
+#    maxWait: 1000
+#    testOnBorrow: true
+logging:
+  config: classpath:logging-config.xml
+
+websocket:
+  url: ws://127.0.0.1:7070/websocket
+
+mybatis:
+  mapperLocations: classpath:springboot/demo/bean/mapper/*.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    shutdown:
+      enabled: true
+      sensitive: false
