@@ -1,5 +1,11 @@
 server: 
-  port: 8080
+  port: 443
+  http-port: 8080
+  ssl:
+    key-store: classpath:tomcat_https.keystore
+    key-store-type: JKS
+    key-alias: tomcat_https
+    key-password: 123456
 spring:
   application:
     name: consumer

@@ -95,7 +95,7 @@ public class NioWebSocketHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
         WebSocketServerHandshakerFactory wsFactory = new WebSocketServerHandshakerFactory(
-                "ws://localhost:8081/websocket", null, false);
+                "", null, false);
         handshaker = wsFactory.newHandshaker(req);
         if (handshaker == null) {
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());

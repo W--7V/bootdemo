@@ -62,7 +62,11 @@ public class DemoController {
 
 	@RequestMapping("/sendMessage")
 	public void sendMessage(String message, String id) {
-//		webSocket.sendMessage(message, id);
+		webSocket.sendMessage(message, id);
+	}
+
+	@RequestMapping("/sendMessageByNetty")
+	public void sendMessageByNetty(String message, String id) {
 		ChannelSupervise.send2All(new TextWebSocketFrame(message));
 	}
 
