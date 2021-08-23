@@ -20,6 +20,7 @@ public class NioWebSocketServer {
             bootstrap.group(boss, work);
             bootstrap.channel(NioServerSocketChannel.class);
             bootstrap.childHandler(new NioWebSocketChannelInitializer());
+//            Channel channel = bootstrap.bind("192.168.1.104",8081).sync().channel();
             Channel channel = bootstrap.bind(8081).sync().channel();
             logger.info("webSocket服务器启动成功：" + channel);
             channel.closeFuture().sync();
