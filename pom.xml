@@ -84,6 +84,12 @@
             <version>4.1.63.Final</version>
         </dependency>
 
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot-starter</artifactId>
+            <version>1.27.0</version>
+        </dependency>
+
     </dependencies>
 
 

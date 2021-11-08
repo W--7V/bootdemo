@@ -1,7 +1,7 @@
 //package springboot.demo.controller;
 //
-//import org.redisson.api.RLock;
-//import org.redisson.api.RedissonClient;
+////import org.redisson.api.RLock;
+////import org.redisson.api.RedissonClient;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.ApplicationContext;
 //import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +9,7 @@
 //import org.springframework.web.bind.annotation.RestController;
 //import redis.clients.jedis.Jedis;
 //import redis.clients.jedis.JedisPool;
+//import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 //import springboot.demo.system.MyEvent;
 //import springboot.demo.system.MyListener;
 //
@@ -16,22 +17,25 @@
 //public class CacheController {
 //
 //
-//    @Autowired
-//    JedisPool jedisPool;
+////    @Autowired
+////    JedisPool jedisPool;
 //
 //    @Autowired
 //    ApplicationContext applicationContext;
 //
+////    @Autowired
+////    private RedissonClient redissonClient;
+//
 //    @Autowired
-//    private RedissonClient redissonClient;
+//    RedisFlowcontrol redisFlowcontrol;
 //
 //
 //    @RequestMapping("/redisLock")
 //    public void redisLock() throws InterruptedException {
-//        RLock lock = redissonClient.getLock("lock");
-//        lock.lock();
-//        Thread.sleep(30000);
-//        lock.unlock();
+////        RLock lock = redissonClient.getLock("lock");
+////        lock.lock();
+////        Thread.sleep(30000);
+////        lock.unlock();
 //    }
 //
 //    @RequestMapping("/setKV")
@@ -55,5 +59,10 @@
 //        jedis.incrBy("1", 3);
 //        jedis.multi();
 //        System.out.println(jedisPool.getResource().get("1"));
+//    }
+//
+//    @RequestMapping("/click")
+//    public boolean testFlow(){
+//        return redisFlowcontrol.isActionAllowed("local",5,5);
 //    }
 //}

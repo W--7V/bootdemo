@@ -4,6 +4,7 @@ package springboot.demo.controller;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import cn.dev33.satoken.stp.StpUtil;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import springboot.demo.bean.Novel;
 import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.WebSocket;
+import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 import springboot.demo.system.websocketByNetty.ChannelSupervise;
 
 @RestController
@@ -29,6 +31,8 @@ public class DemoController {
 	
 	@Autowired
 	NovelService novelService;
+
+
 
 	@Autowired
 	ApplicationContext applicationContext;
@@ -82,6 +86,16 @@ public class DemoController {
 		novel.setNovelName(name);
 		novelMapper.updateByPrimaryKeySelective(novel);
 		return "200";
+	}
+
+	@RequestMapping("/login")
+	public void login(){
+		StpUtil.login(1);
+	}
+
+	@RequestMapping("/getLoginId")
+	public String getLoginId(){
+		return StpUtil.getLoginId().toString();
 	}
 
 }

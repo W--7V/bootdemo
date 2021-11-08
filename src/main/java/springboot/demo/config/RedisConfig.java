@@ -16,10 +16,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisSentinelPool;
-import redis.clients.jedis.Protocol;
+import redis.clients.jedis.*;
 
 //@Configuration
 //@EnableCaching
@@ -73,8 +70,9 @@ public class RedisConfig extends CachingConfigurerSupport {
         jedisPoolConfig.setMinIdle(5);
         jedisPoolConfig.setMaxWaitMillis(1000);
         jedisPoolConfig.setTestOnBorrow(true);
-
-//        return new JedisPool(jedisPoolConfig, "192.168.1.103", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT, "123456");
-        return new JedisPool(jedisPoolConfig, "127.0.0.1", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.104", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT, "123456");
+//        System.out.println(jedisPool.getResource().get("1"));
+        return jedisPool;
+//        return new JedisPool(jedisPoolConfig, "127.0.0.1", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT);
     }
 }
