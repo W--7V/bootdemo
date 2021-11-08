@@ -16,7 +16,7 @@ public class RedisFlowcontrol {
 
     public boolean isActionAllowed(String userId, int period, int maxCount) {
         // 生成唯一的key
-        Jedis jedis=jedisPool.getResource();
+        Jedis jedis = jedisPool.getResource();
         String key = String.format("hist:%s", userId);
         long nowTimeMillis = System.currentTimeMillis();
         // 使用管道
@@ -26,7 +26,7 @@ public class RedisFlowcontrol {
         pipe.zremrangeByScore(key, 0, nowTimeMillis - period * 1000);
         Response<Long> count = pipe.zcard(key);
 
-        if(count.get() < maxCount){
+        if (count.get() < maxCount) {
             // 添加当前操作当zset中
             pipe.zadd(key, nowTimeMillis, "" + nowTimeMillis);
             pipe.expire(key, period + 1);
@@ -40,5 +40,12 @@ public class RedisFlowcontrol {
         jedisPool.returnResource(jedis);
 
         return count.get() <= maxCount;
+    }
+
+    public boolean countdown() {
+
+        Jedis jedis = jedisPool.getResource();
+
+        return false;
     }
 }
