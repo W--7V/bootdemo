@@ -13,6 +13,8 @@ import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 import springboot.demo.system.MyEvent;
 import springboot.demo.system.MyListener;
 
+import java.util.Arrays;
+
 @RestController
 public class CacheController {
 
@@ -67,7 +69,7 @@ public class CacheController {
     }
 
     @RequestMapping("/flow")
-    public boolean testFlowControl(){
-        return redisFlowcontrol.isActionAllowed("local",5,5);
+    public Object testFlowControl(){
+        return redisFlowcontrol.countdown(Arrays.asList("sms"),Arrays.asList("10","20"));
     }
 }

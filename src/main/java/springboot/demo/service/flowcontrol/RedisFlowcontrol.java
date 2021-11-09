@@ -7,7 +7,13 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
 
 @Component
 public class RedisFlowcontrol {
@@ -42,10 +48,31 @@ public class RedisFlowcontrol {
         return count.get() <= maxCount;
     }
 
-    public boolean countdown() {
+    public Object countdown(List<String> keys, List<String> args) {
+        URL scriptPath = this.getClass().getResource("/flowcontrol.lua");
+        File scriptFile = null;
+        try {
+            scriptFile = new File(scriptPath.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        String script = null;
+        try (BufferedReader reader = new BufferedReader(new FileReader(scriptFile))) {
+            StringBuffer sbf = new StringBuffer();
+            String tempStr;
+            while ((tempStr = reader.readLine()) != null) {
+                sbf.append(tempStr);
+                sbf.append("\n");
+            }
+            script = sbf.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         Jedis jedis = jedisPool.getResource();
+        Object res = jedis.eval(script, keys, args);
 
-        return false;
+        return res;
     }
 }

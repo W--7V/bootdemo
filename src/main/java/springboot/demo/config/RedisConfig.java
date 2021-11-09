@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import redis.clients.jedis.*;
 
-//@Configuration
+@Configuration
 //@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
