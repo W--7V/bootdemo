@@ -72,6 +72,7 @@ public class RedisFlowcontrol {
 
         Jedis jedis = jedisPool.getResource();
         Object res = jedis.eval(script, keys, args);
+        jedisPool.returnResource(jedis);
 
         return res;
     }
