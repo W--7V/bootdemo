@@ -26,13 +26,12 @@ public class DemoController {
 
 	@Autowired
 	WebSocket webSocket;
+
 	@Autowired
 	NovelMapper novelMapper;
 	
 	@Autowired
 	NovelService novelService;
-
-
 
 	@Autowired
 	ApplicationContext applicationContext;
