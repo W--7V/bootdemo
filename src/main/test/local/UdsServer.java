@@ -32,7 +32,7 @@ public class UdsServer {
                             outputStream.write("Hello client!".getBytes(StandardCharsets.UTF_8));
                             outputStream.flush();
                             int read = inputStream.read(buffer);
-                            System.out.println("client say : " + new String(buffer, 0, read, StandardCharsets.UTF_8));
+                            System.out.println("client "+socket.hashCode()+" say : " + new String(buffer, 0, read, StandardCharsets.UTF_8));
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
