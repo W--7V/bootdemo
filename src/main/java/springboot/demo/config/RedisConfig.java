@@ -49,7 +49,7 @@ public class RedisConfig extends CachingConfigurerSupport {
 //		return template;
 //	}
 
-//    	@Bean
+    //    	@Bean
     public JedisSentinelPool getJedisSentinelPool() {
         Set<String> sentinels = new HashSet<>();
         sentinels.add("192.168.1.104:26379");
@@ -70,7 +70,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         jedisPoolConfig.setMinIdle(5);
         jedisPoolConfig.setMaxWaitMillis(1000);
         jedisPoolConfig.setTestOnBorrow(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.104", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT, "123456");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.104", 6380, Protocol.DEFAULT_TIMEOUT, "123456");
 //        System.out.println(jedisPool.getResource().get("1"));
         return jedisPool;
 //        return new JedisPool(jedisPoolConfig, "127.0.0.1", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT);

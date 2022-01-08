@@ -84,6 +84,6 @@ public class CacheController {
     @RequestMapping("/flow")
     public Object testFlowControl() {
         LOGGER.info("conut:{}", atomicInteger.incrementAndGet());
-        return redisFlowcontrol.countdown(Arrays.asList("sms"), Arrays.asList("1", "200"));
+        return redisFlowcontrol.countdown(Arrays.asList("sms"), Arrays.asList("1", "200", "60"));
     }
 }

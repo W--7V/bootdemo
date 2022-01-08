@@ -1,5 +1,7 @@
 package springboot.demo.service.flowcontrol;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -19,6 +21,10 @@ import java.util.List;
 public class RedisFlowcontrol {
     @Autowired
     JedisPool jedisPool;
+
+    private static String script = null;
+
+    private static Logger LOGGER = LoggerFactory.getLogger(RedisFlowcontrol.class);
 
     public boolean isActionAllowed(String userId, int period, int maxCount) {
         // 生成唯一的key
@@ -48,15 +54,15 @@ public class RedisFlowcontrol {
         return count.get() <= maxCount;
     }
 
-    public Object countdown(List<String> keys, List<String> args) {
-        URL scriptPath = this.getClass().getResource("/flowcontrol.lua");
+    public static void loadScript(){
+        LOGGER.info("load lua script");
+        URL scriptPath = RedisFlowcontrol.class.getResource("/flowcontrol.lua");
         File scriptFile = null;
         try {
             scriptFile = new File(scriptPath.toURI());
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
-        String script = null;
         try (BufferedReader reader = new BufferedReader(new FileReader(scriptFile))) {
             StringBuffer sbf = new StringBuffer();
             String tempStr;
@@ -68,12 +74,12 @@ public class RedisFlowcontrol {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
-
+    public Object countdown(List<String> keys, List<String> args) {
         Jedis jedis = jedisPool.getResource();
         Object res = jedis.eval(script, keys, args);
         jedisPool.returnResource(jedis);
-
         return res;
     }
 }
