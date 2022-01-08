@@ -21,7 +21,7 @@ import springboot.demo.util.ServerEncoder;
 @ServerEndpoint(value = "/websocket", encoders = ServerEncoder.class)
 public class WebSocket {
 
-    Logger log = LoggerFactory.getLogger(WebSocket.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(WebSocket.class);
 
     private static ConcurrentHashMap<String, Session> concurrentHashMap = new ConcurrentHashMap<String, Session>();
 
@@ -30,12 +30,12 @@ public class WebSocket {
         concurrentHashMap.put(session.getQueryString(), session);
         Map<String, Object> userProperties = session.getUserProperties();
         System.out.println(session.getQueryString());
-        log.info("websocket connect");
+        LOGGER.info("websocket connect");
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        log.info("websocket push message:{}", message);
+        LOGGER.info("websocket push message:{}", message);
     }
 
     @OnClose

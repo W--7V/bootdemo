@@ -36,7 +36,7 @@ public class DemoController {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	Logger log = LoggerFactory.getLogger(DemoController.class);
+	Logger Log = LoggerFactory.getLogger(DemoController.class);
 
 	@GetMapping("/testhello")
 	public String testhello(HttpServletRequest request) {
@@ -57,7 +57,7 @@ public class DemoController {
 		System.out.println(request.getServletPath());
 		ServletContext servletContext = request.getServletContext();
 		System.out.println(request.getServletContext().getServletContextName());
-		log.info("Hello spring");
+		Log.info("Hello spring");
 		
 		novelService.list();
 		return "Hello spring";

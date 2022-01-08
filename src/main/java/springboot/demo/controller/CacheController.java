@@ -1,19 +1,19 @@
 package springboot.demo.controller;
 
-//import org.redisson.api.RLock;
-//import org.redisson.api.RedissonClient;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
+import springboot.demo.service.NovelService;
 import springboot.demo.service.flowcontrol.RedisFlowcontrol;
-import springboot.demo.system.MyEvent;
-import springboot.demo.system.MyListener;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class CacheController {
@@ -25,19 +25,32 @@ public class CacheController {
     @Autowired
     ApplicationContext applicationContext;
 
-//    @Autowired
-//    private RedissonClient redissonClient;
+    @Autowired
+    private RedissonClient redissonClient;
 
     @Autowired
     RedisFlowcontrol redisFlowcontrol;
 
+    @Autowired
+    NovelService novelService;
 
-    @RequestMapping("/redisLock")
-    public void redisLock() throws InterruptedException {
-//        RLock lock = redissonClient.getLock("lock");
-//        lock.lock();
-//        Thread.sleep(30000);
-//        lock.unlock();
+    static AtomicInteger atomicInteger = new AtomicInteger();
+
+    private static Logger LOGGER = LoggerFactory.getLogger(CacheController.class);
+
+    @RequestMapping("/incrWithRedisLock")
+    public void incrWithRedisLock(@RequestParam Integer id) throws InterruptedException {
+        RLock lock = redissonClient.getLock("lock");
+        lock.lock();
+        novelService.incrementById(id);
+        lock.unlock();
+        System.out.println(atomicInteger.incrementAndGet());
+    }
+
+    @RequestMapping("/incr")
+    public void incr(@RequestParam Integer id) throws InterruptedException {
+        novelService.incrementById(id);
+        System.out.println(atomicInteger.incrementAndGet());
     }
 
     @RequestMapping("/setKV")
@@ -48,7 +61,7 @@ public class CacheController {
     @RequestMapping("/getKV")
     public String getKV(String key) {
 //        return jedisPool.getResource().get(key);
-		return "";
+        return "";
     }
 
     @RequestMapping("/publishEvent")
@@ -64,12 +77,13 @@ public class CacheController {
     }
 
     @RequestMapping("/click")
-    public boolean testFlow(){
-        return redisFlowcontrol.isActionAllowed("local",5,5);
+    public boolean testFlow() {
+        return redisFlowcontrol.isActionAllowed("local", 5, 5);
     }
 
     @RequestMapping("/flow")
-    public Object testFlowControl(){
-        return redisFlowcontrol.countdown(Arrays.asList("sms"),Arrays.asList("10","20"));
+    public Object testFlowControl() {
+        LOGGER.info("conut:{}", atomicInteger.incrementAndGet());
+        return redisFlowcontrol.countdown(Arrays.asList("sms"), Arrays.asList("1", "200"));
     }
 }

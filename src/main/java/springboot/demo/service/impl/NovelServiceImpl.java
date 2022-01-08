@@ -13,21 +13,29 @@ import springboot.demo.service.NovelService;
 
 @Service
 public class NovelServiceImpl implements NovelService {
-	Logger log = LoggerFactory.getLogger(NovelServiceImpl.class);
-	
-	@Autowired
-	NovelMapper novelMapper;
+    private static Logger LOGGER = LoggerFactory.getLogger(NovelServiceImpl.class);
 
-	@Override
-	public List<Novel> list() {
-		log.info("log in service");
-		return null;
-	}
+    @Autowired
+    NovelMapper novelMapper;
 
-	@Override
-	public Novel getNovelById(int id) {
-		log.info("getNovelById---id: "+id);
-		return novelMapper.selectByPrimaryKey(id);
-	}
+    @Override
+    public List<Novel> list() {
+        LOGGER.info("log in service");
+        return null;
+    }
 
+    @Override
+    public Novel getNovelById(int id) {
+        LOGGER.info("getNovelById---id: " + id);
+        return novelMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public Novel incrementById(int id) {
+        Novel novel = novelMapper.selectByPrimaryKey(id);
+        LOGGER.info("novel ver: {}", novel.getVer());
+        novel.setVer(novel.getVer() + 1);
+        novelMapper.updateByPrimaryKeySelective(novel);
+        return null;
+    }
 }

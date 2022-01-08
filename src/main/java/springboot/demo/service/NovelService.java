@@ -8,4 +8,6 @@ public interface NovelService {
 	List<Novel> list();
 	
 	Novel getNovelById(int id);
+
+	Novel incrementById(int id);
 }
