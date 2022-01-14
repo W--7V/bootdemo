@@ -3,6 +3,8 @@ package springboot.demo.controller;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import cn.dev33.satoken.stp.StpUtil;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -18,7 +20,6 @@ import springboot.demo.bean.Novel;
 import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.WebSocket;
-import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 import springboot.demo.system.websocketByNetty.ChannelSupervise;
 
 @RestController
@@ -36,11 +37,14 @@ public class DemoController {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	Logger Log = LoggerFactory.getLogger(DemoController.class);
+	Logger LOGGER = LoggerFactory.getLogger(DemoController.class);
 
 	@GetMapping("/testhello")
-	public String testhello(HttpServletRequest request) {
+	public String testhello(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("testhello");
+		HttpSession session = request.getSession();
+		int maxInactiveInterval = session.getMaxInactiveInterval();
+//		response.addCookie(new Cookie("sessionId", UUID.randomUUID().toString().replace("-","")));
 		return "hello";
 	}
 
@@ -57,7 +61,7 @@ public class DemoController {
 		System.out.println(request.getServletPath());
 		ServletContext servletContext = request.getServletContext();
 		System.out.println(request.getServletContext().getServletContextName());
-		Log.info("Hello spring");
+		LOGGER.info("Hello spring");
 		
 		novelService.list();
 		return "Hello spring";

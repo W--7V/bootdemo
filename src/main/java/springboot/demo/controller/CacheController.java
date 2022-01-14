@@ -17,8 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class CacheController {
-
-
 //    @Autowired
 //    JedisPool jedisPool;
 
@@ -34,8 +32,6 @@ public class CacheController {
     @Autowired
     NovelService novelService;
 
-    static AtomicInteger atomicInteger = new AtomicInteger();
-
     private static Logger LOGGER = LoggerFactory.getLogger(CacheController.class);
 
     @RequestMapping("/incrWithRedisLock")
@@ -44,13 +40,11 @@ public class CacheController {
         lock.lock();
         novelService.incrementById(id);
         lock.unlock();
-        System.out.println(atomicInteger.incrementAndGet());
     }
 
     @RequestMapping("/incr")
     public void incr(@RequestParam Integer id) throws InterruptedException {
         novelService.incrementById(id);
-        System.out.println(atomicInteger.incrementAndGet());
     }
 
     @RequestMapping("/setKV")
@@ -83,7 +77,6 @@ public class CacheController {
 
     @RequestMapping("/flow")
     public Object testFlowControl() {
-        LOGGER.info("conut:{}", atomicInteger.incrementAndGet());
         return redisFlowcontrol.countdown(Arrays.asList("sms"), Arrays.asList("1", "200", "60"));
     }
 }

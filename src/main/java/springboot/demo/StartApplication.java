@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.apache.tomcat.websocket.server.WsSci;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -25,7 +27,18 @@ public class StartApplication {
 
     @Bean
     public ServletWebServerFactory servletContainer() {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory(){
+            @Override
+            protected void postProcessContext(Context context) {
+                // TODO Auto-generated method stub
+                SecurityConstraint constraint = new SecurityConstraint();
+                constraint.setUserConstraint("CONFIDENTIAL");
+                SecurityCollection collection = new SecurityCollection();
+                collection.addPattern("/");
+                constraint.addCollection(collection);
+                context.addConstraint(constraint);
+            }
+        };
 
         tomcat.addAdditionalTomcatConnectors(createSslConnector());
         return tomcat;
