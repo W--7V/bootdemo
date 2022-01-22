@@ -3,6 +3,7 @@ package springboot.demo.config;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +22,15 @@ import redis.clients.jedis.*;
 @Configuration
 //@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
+
+    @Value("${spring.redis.host}")
+    String redisHost;
+
+    @Value("${spring.redis.port}")
+    Integer port;
+
+    @Value("${spring.redis.password}")
+    String password;
 
 //	@Bean
 //	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory){
@@ -70,7 +80,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         jedisPoolConfig.setMinIdle(5);
         jedisPoolConfig.setMaxWaitMillis(1000);
         jedisPoolConfig.setTestOnBorrow(true);
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, "192.168.1.104", 6380, Protocol.DEFAULT_TIMEOUT, "123456");
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, redisHost, port, Protocol.DEFAULT_TIMEOUT, password);
 //        System.out.println(jedisPool.getResource().get("1"));
         return jedisPool;
 //        return new JedisPool(jedisPoolConfig, "127.0.0.1", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT);

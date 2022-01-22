@@ -1,6 +1,7 @@
 package local;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 
 public class Test {
@@ -12,7 +13,8 @@ public class Test {
 //		System.out.println(checkString("{(})()".toCharArray()));
 //        intEqual();
 //        System.out.println(firstUniqChar("abaccdeff"));
-        System.out.println(longestSubarray(new int[]{10,1,2,4,7,2},5));
+//        System.out.println(longestSubarray(new int[]{10,1,2,4,7,2},5));
+        multiAdd();
 
     }
 
@@ -155,5 +157,36 @@ public class Test {
             }
         }
         return -1;
+    }
+
+    static int num;
+    static CountDownLatch countDownLatch = new CountDownLatch(2);
+    public static void multiAdd(){
+
+        Runnable r = () -> {
+            for (int i=0;i<1000;i++){
+                num++;
+            }
+//            countDownLatch.countDown();
+        };
+
+
+        Thread t1 = new Thread(r);
+        Thread t2 = new Thread(r);
+        t1.start();
+        t2.start();
+        try {
+            t1.join();
+            t2.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        try {
+//            countDownLatch.await();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        System.out.println(num);
     }
 }

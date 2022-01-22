@@ -11,14 +11,14 @@ spring:
     name: consumer
   main:
     allow-bean-definition-overriding: true
-#  redis:
-#    host: 127.0.0.1
-#    port: 6379
-#    password:
-#    maxIdle: 300
-#    maxActive: 600
-#    maxWait: 1000
-#    testOnBorrow: true
+  redis:
+    host: 192.168.1.35
+    port: 6380
+    password: 123456
+    maxIdle: 300
+    maxActive: 600
+    maxWait: 1000
+    testOnBorrow: true
 logging:
   config: classpath:logging-config.xml
 
