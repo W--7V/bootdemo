@@ -1,5 +1,7 @@
 package local;
 
+import org.springframework.context.support.AbstractRefreshableApplicationContext;
+
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
@@ -15,7 +17,7 @@ public class Test {
 //        System.out.println(firstUniqChar("abaccdeff"));
 //        System.out.println(longestSubarray(new int[]{10,1,2,4,7,2},5));
         multiAdd();
-
+        AbstractRefreshableApplicationContext a ;
     }
 
     public static void intEqual() {
@@ -164,7 +166,7 @@ public class Test {
     public static void multiAdd(){
 
         Runnable r = () -> {
-            for (int i=0;i<1000;i++){
+            for (int i=0;i<10000;i++){
                 num++;
             }
 //            countDownLatch.countDown();

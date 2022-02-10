@@ -1,6 +1,5 @@
 server: 
   port: 443
-
   ssl:
     key-store: classpath:tomcat_https.keystore
     key-store-type: JKS
@@ -12,7 +11,7 @@ spring:
   main:
     allow-bean-definition-overriding: true
   redis:
-    host: 192.168.1.35
+    host: 192.168.1.36
     port: 6380
     password: 123456
     maxIdle: 300

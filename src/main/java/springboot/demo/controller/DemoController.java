@@ -1,6 +1,5 @@
 package springboot.demo.controller;
 
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,6 +43,7 @@ public class DemoController {
 		System.out.println("testhello");
 		HttpSession session = request.getSession();
 		int maxInactiveInterval = session.getMaxInactiveInterval();
+//		Object novelService = applicationContext.getBean("novelService");
 //		response.addCookie(new Cookie("sessionId", UUID.randomUUID().toString().replace("-","")));
 		return "hello";
 	}
