@@ -10,4 +10,6 @@ public interface NovelService {
 	Novel getNovelById(int id);
 
 	Novel incrementById(int id);
+
+	Novel testSqlInject(String query);
 }

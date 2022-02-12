@@ -12,6 +12,12 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
     <result column="ver" jdbcType="INTEGER" property="ver" />
   </resultMap>
+  <select id="selectByQuery" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from novel where id = ${query}
+  </select>
+
   <sql id="Example_Where_Clause">
     <!--
       WARNING - @mbggenerated

@@ -67,6 +67,11 @@ public class DemoController {
 		return "Hello spring";
 	}
 
+	@GetMapping("/testSqlInject")
+	public String testSqlInject(String query){
+		return novelService.testSqlInject(query).getNovelName();
+	}
+
 	@RequestMapping("/sendMessage")
 	public void sendMessage(String message, String id) {
 		webSocket.sendMessage(message, id);

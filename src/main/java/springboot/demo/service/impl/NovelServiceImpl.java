@@ -38,4 +38,11 @@ public class NovelServiceImpl implements NovelService {
         novelMapper.updateByPrimaryKeySelective(novel);
         return null;
     }
+
+    @Override
+    public Novel testSqlInject(String query) {
+        Novel novel = novelMapper.selectByQuery(query);
+        LOGGER.info("queryed novel name:{}",novel.getNovelName());
+        return novel;
+    }
 }
