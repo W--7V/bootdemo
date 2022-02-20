@@ -2,6 +2,7 @@ package springboot.demo.service;
 
 import java.util.List;
 
+import org.apache.kafka.common.protocol.types.Field;
 import springboot.demo.bean.Novel;
 
 public interface NovelService {
@@ -12,4 +13,6 @@ public interface NovelService {
 	Novel incrementById(int id);
 
 	Novel testSqlInject(String query);
+
+	String testTransactional(String query);
 }

@@ -11,15 +11,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springboot.demo.bean.Novel;
 import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.WebSocket;
 import springboot.demo.system.websocketByNetty.ChannelSupervise;
+
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 @RestController
 public class DemoController {
@@ -39,10 +45,11 @@ public class DemoController {
 	Logger LOGGER = LoggerFactory.getLogger(DemoController.class);
 
 	@GetMapping("/testhello")
-	public String testhello(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("testhello");
+	public String testhello(HttpServletRequest request, HttpServletResponse response, String helloparam) {
+		LOGGER.info("testhello");
 		HttpSession session = request.getSession();
 		int maxInactiveInterval = session.getMaxInactiveInterval();
+		ClassPathXmlApplicationContext c = new ClassPathXmlApplicationContext("");
 //		Object novelService = applicationContext.getBean("novelService");
 //		response.addCookie(new Cookie("sessionId", UUID.randomUUID().toString().replace("-","")));
 		return "hello";
@@ -58,6 +65,8 @@ public class DemoController {
 //		for (ServiceInstance serviceInstance : instances) {
 //			System.out.println(serviceInstance.getUri());
 //		}
+		DispatcherServlet d;
+		WebMvcConfigurationSupport w;
 		System.out.println(request.getServletPath());
 		ServletContext servletContext = request.getServletContext();
 		System.out.println(request.getServletContext().getServletContextName());
@@ -67,10 +76,26 @@ public class DemoController {
 		return "Hello spring";
 	}
 
+	/**
+	 * 测试sql注入
+	 * @param query
+	 * @return
+	 */
 	@GetMapping("/testSqlInject")
 	public String testSqlInject(String query){
 		return novelService.testSqlInject(query).getNovelName();
 	}
+
+	/**
+	 * 测试事务不生效场景
+	 * @param query
+	 * @return
+	 */
+	@GetMapping("/testTransactional")
+	public String testTransactional(String query){
+		return novelService.testTransactional(query);
+	}
+
 
 	@RequestMapping("/sendMessage")
 	public void sendMessage(String message, String id) {

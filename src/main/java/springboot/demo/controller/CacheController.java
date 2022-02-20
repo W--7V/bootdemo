@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 
@@ -17,8 +19,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class CacheController {
-//    @Autowired
-//    JedisPool jedisPool;
+    @Autowired
+    JedisPool jedisPool;
 
     @Autowired
     ApplicationContext applicationContext;
@@ -49,13 +51,19 @@ public class CacheController {
 
     @RequestMapping("/setKV")
     public void setKV(@RequestParam("key") String key, @RequestParam("val") String val) {
-//        jedisPool.getResource().set(key, val);
+        Jedis jedis = jedisPool.getResource();
+        jedis.set(key, val);
+        jedis.close();
     }
 
     @RequestMapping("/getKV")
     public String getKV(String key) {
-//        return jedisPool.getResource().get(key);
-        return "";
+        Jedis jedis = jedisPool.getResource();
+        String value = jedis.get(key);
+        LOGGER.info(value);
+        jedis.close();
+        return value;
+//        return "";
     }
 
     @RequestMapping("/publishEvent")

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import springboot.demo.bean.Novel;
 import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
@@ -31,11 +32,16 @@ public class NovelServiceImpl implements NovelService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Novel incrementById(int id) {
         Novel novel = novelMapper.selectByPrimaryKey(id);
         LOGGER.info("novel ver: {}", novel.getVer());
         novel.setVer(novel.getVer() + 1);
         novelMapper.updateByPrimaryKeySelective(novel);
+
+        if(id == 1){
+            throw new RuntimeException();
+        }
         return null;
     }
 
@@ -44,5 +50,11 @@ public class NovelServiceImpl implements NovelService {
         Novel novel = novelMapper.selectByQuery(query);
         LOGGER.info("queryed novel name:{}",novel.getNovelName());
         return novel;
+    }
+
+    @Override
+    public String testTransactional(String query) {
+        incrementById(1);
+        return "ok";
     }
 }
