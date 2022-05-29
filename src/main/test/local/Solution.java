@@ -39,7 +39,59 @@ public class Solution {
 //			System.out.println(integer);
 //		}
 //        System.out.println(s.findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3));
-        s.rotateTheBox(new char[][]{{'#', '.', '.', '#'}});
+//        s.rotateTheBox(new char[][]{{'#', '.', '.', '#'}});
+        s.pathSum(s.Tree113(), 22);
+    }
+
+    static List<List<Integer>> res;
+    static List<Integer> current;
+
+    public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
+        res = new ArrayList<>();
+        current = new ArrayList<>();
+        dfs(root, targetSum);
+        return res;
+    }
+
+    private void dfs(TreeNode node, int targetSum) {
+        int sum = current.stream().reduce(0, Integer::sum);
+        if (node == null) {
+            return;
+        }
+
+        current.add(node.val);
+        if (sum + node.val == targetSum && node.left == null && node.right == null) {
+            res.add(new ArrayList<>(current));
+            current.remove(current.size() - 1);
+            return;
+        }
+        dfs(node.left, targetSum);
+        dfs(node.right, targetSum);
+        current.remove(current.size() - 1);
+    }
+
+    public TreeNode Tree113() {
+        TreeNode r = new TreeNode(5);
+        TreeNode n1 = new TreeNode(4);
+        TreeNode n2 = new TreeNode(8);
+        TreeNode n3 = new TreeNode(11);
+        TreeNode n4 = new TreeNode(13);
+        TreeNode n5 = new TreeNode(4);
+        TreeNode n6 = new TreeNode(7);
+        TreeNode n7 = new TreeNode(2);
+        TreeNode n8 = new TreeNode(5);
+        TreeNode n9 = new TreeNode(1);
+        r.left = n1;
+        r.right = n2;
+        n1.left = n3;
+        n2.left = n4;
+        n2.right = n5;
+        n3.left = n6;
+        n3.right = n7;
+        n5.left = n8;
+        n5.right = n9;
+
+        return r;
     }
 
     public char[][] rotateTheBox(char[][] box) {
@@ -295,7 +347,7 @@ public class Solution {
         return maxans;
     }
 
-    List<List<Integer>> res = new ArrayList<List<Integer>>();
+//    List<List<Integer>> res = new ArrayList<List<Integer>>();
 
     public List<List<Integer>> permuteUnique(int[] nums) {
         List<Integer> numsCollection = new ArrayList<>();
