@@ -31,12 +31,12 @@ public class StartApplication {
             @Override
             protected void postProcessContext(Context context) {
                 // TODO Auto-generated method stub
-                SecurityConstraint constraint = new SecurityConstraint();
-                constraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/");
-                constraint.addCollection(collection);
-                context.addConstraint(constraint);
+//                SecurityConstraint constraint = new SecurityConstraint();
+//                constraint.setUserConstraint("CONFIDENTIAL");
+//                SecurityCollection collection = new SecurityCollection();
+//                collection.addPattern("/");
+//                constraint.addCollection(collection);
+//                context.addConstraint(constraint);
             }
         };
 
@@ -48,7 +48,7 @@ public class StartApplication {
         Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
         connector.setScheme("http");
         //Connector监听的http的端口号
-        connector.setPort(8080);
+        connector.setPort(80);
         connector.setSecure(false);
         //监听到http的端口号后转向到的https的端口号
         connector.setRedirectPort(443);

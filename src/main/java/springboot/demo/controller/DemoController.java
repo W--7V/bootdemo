@@ -3,7 +3,7 @@ package springboot.demo.controller;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+//import javax.servlet.http.HttpSession;
 
 import cn.dev33.satoken.stp.StpUtil;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+//import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +23,6 @@ import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.WebSocket;
 import springboot.demo.system.websocketByNetty.ChannelSupervise;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 @RestController
 public class DemoController {
@@ -47,9 +44,9 @@ public class DemoController {
 	@GetMapping("/testhello")
 	public String testhello(HttpServletRequest request, HttpServletResponse response, String helloparam) {
 		LOGGER.info("testhello");
-		HttpSession session = request.getSession();
-		int maxInactiveInterval = session.getMaxInactiveInterval();
-		ClassPathXmlApplicationContext c = new ClassPathXmlApplicationContext("");
+//		HttpSession session = request.getSession();
+//		int maxInactiveInterval = session.getMaxInactiveInterval();
+//		ClassPathXmlApplicationContext c = new ClassPathXmlApplicationContext("");
 //		Object novelService = applicationContext.getBean("novelService");
 //		response.addCookie(new Cookie("sessionId", UUID.randomUUID().toString().replace("-","")));
 		return "hello";
@@ -95,7 +92,6 @@ public class DemoController {
 	public String testTransactional(String query){
 		return novelService.testTransactional(query);
 	}
-
 
 	@RequestMapping("/sendMessage")
 	public void sendMessage(String message, String id) {

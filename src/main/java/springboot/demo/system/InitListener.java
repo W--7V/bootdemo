@@ -14,6 +14,6 @@ public class InitListener implements ApplicationRunner {
 
         System.out.println("my runner");
         NioWebSocketServer nioWebSocketServer = new NioWebSocketServer();
-        nioWebSocketServer.init();
+//        nioWebSocketServer.init();
     }
 }

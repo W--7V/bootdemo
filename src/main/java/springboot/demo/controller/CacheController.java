@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,6 @@ import springboot.demo.service.NovelService;
 import springboot.demo.service.flowcontrol.RedisFlowcontrol;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 public class CacheController {
@@ -34,6 +34,9 @@ public class CacheController {
     @Autowired
     NovelService novelService;
 
+    @Autowired
+    StringRedisTemplate redisTemplate;
+
     private static Logger LOGGER = LoggerFactory.getLogger(CacheController.class);
 
     @RequestMapping("/incrWithRedisLock")
@@ -49,6 +52,11 @@ public class CacheController {
         novelService.incrementById(id);
     }
 
+    @RequestMapping("/templateSetKV")
+    public void templateSetKV(@RequestParam("key") String key, @RequestParam("val") String val) {
+        redisTemplate.opsForValue().set(key, val);
+    }
+
     @RequestMapping("/setKV")
     public void setKV(@RequestParam("key") String key, @RequestParam("val") String val) {
         Jedis jedis = jedisPool.getResource();
@@ -58,12 +66,12 @@ public class CacheController {
 
     @RequestMapping("/getKV")
     public String getKV(String key) {
+        LOGGER.info("key:{}", key);
         Jedis jedis = jedisPool.getResource();
         String value = jedis.get(key);
         LOGGER.info(value);
         jedis.close();
         return value;
-//        return "";
     }
 
     @RequestMapping("/publishEvent")
