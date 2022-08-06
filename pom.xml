@@ -114,6 +114,17 @@
                 </includes>
                 <filtering>false</filtering>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.yml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.lua</include>
+                    <include>**/*.keystore</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
         </resources>
         <plugins>
             <plugin>
