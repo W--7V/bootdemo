@@ -14,9 +14,11 @@ public class DataSourceConfig {
 	public DataSource set() {
 		HikariDataSource hikariDataSource = new HikariDataSource();
 		hikariDataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		hikariDataSource.setJdbcUrl("jdbc:mysql://119.91.195.175:23306/library?charactorEncoding=utf-8&useUnicode=true&useSSL=false");
+//		hikariDataSource.setJdbcUrl("jdbc:mysql://119.91.195.175:23306/library?charactorEncoding=utf-8&useUnicode=true&useSSL=false");
+		hikariDataSource.setJdbcUrl("jdbc:mysql://127.0.0.1:3306/library?charactorEncoding=utf-8&useUnicode=true&useSSL=false");
 		hikariDataSource.setUsername("root");
-		hikariDataSource.setPassword("mysql://23306");
+//		hikariDataSource.setPassword("mysql://23306");
+		hikariDataSource.setPassword("root");
 		hikariDataSource.setMinimumIdle(10);
 		hikariDataSource.setMaximumPoolSize(20);
 		hikariDataSource.setConnectionTimeout(30000);

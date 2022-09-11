@@ -4,6 +4,8 @@ import org.springframework.context.support.AbstractRefreshableApplicationContext
 
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 
 public class Test {
@@ -16,8 +18,8 @@ public class Test {
 //        intEqual();
 //        System.out.println(firstUniqChar("abaccdeff"));
 //        System.out.println(longestSubarray(new int[]{10,1,2,4,7,2},5));
-        multiAdd();
-        AbstractRefreshableApplicationContext a ;
+//        multiAdd();
+        testStream();
     }
 
     public static void intEqual() {
@@ -31,19 +33,19 @@ public class Test {
     }
 
     public static int longestSubarray(int[] nums, int limit) {
-        int res = 0,current=0;
+        int res = 0, current = 0;
         int left = 0;
         TreeMap<Integer, Integer> window = new TreeMap<>();
 
-        for (int i=0;i<nums.length;i++) {
-            window.put(nums[i],i);
-            while (window.lastKey()-window.firstKey()>limit){
+        for (int i = 0; i < nums.length; i++) {
+            window.put(nums[i], i);
+            while (window.lastKey() - window.firstKey() > limit) {
                 window.remove(nums[left]);
                 left++;
                 current--;
             }
             current++;
-            res = Math.max(res,current);
+            res = Math.max(res, current);
         }
 
         return res;
@@ -162,12 +164,15 @@ public class Test {
     }
 
     static int num;
+    static AtomicInteger aNum = new AtomicInteger();
     static CountDownLatch countDownLatch = new CountDownLatch(2);
-    public static void multiAdd(){
+
+    public static void multiAdd() {
 
         Runnable r = () -> {
-            for (int i=0;i<10000;i++){
+            for (int i = 0; i < 10000; i++) {
                 num++;
+                aNum.incrementAndGet();
             }
 //            countDownLatch.countDown();
         };
@@ -190,5 +195,19 @@ public class Test {
 //        }
 
         System.out.println(num);
+        System.out.println(aNum.get());
+    }
+
+
+    public static void testStream() {
+//        int[] a = new int[]{1, 2, 3, 4, 5, 6};
+        List<Integer> l = Arrays.asList(1, 2, 3, 4, 5, 6);
+        Object o = l.stream().map((i) -> {
+            System.out.println(i);
+            return i;
+        }).max(Integer::compareTo).get();
+        System.out.println(o);
+        Integer i = Stream.of(2,4,6,8,10).reduce((x1, x2) -> x1 + x2).get();
+        System.out.println(i);
     }
 }

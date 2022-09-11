@@ -36,13 +36,13 @@ public class NioServer {
                 while (selector.select(0) > 0) {
                     Set<SelectionKey> selectionKeys = selector.selectedKeys();
                     Iterator<SelectionKey> iterator = selectionKeys.iterator();
-                    while(iterator.hasNext()){
+                    while (iterator.hasNext()) {
                         SelectionKey key = iterator.next();
                         iterator.remove();
 
-                        if(key.isAcceptable()){
+                        if (key.isAcceptable()) {
                             processAccept(key);
-                        }else {
+                        } else {
                             processRead(key);
                         }
 
@@ -68,8 +68,8 @@ public class NioServer {
         }
     }
 
-    private static void processAccept(SelectionKey key){
-        ServerSocketChannel channel = (ServerSocketChannel)key.channel();
+    private static void processAccept(SelectionKey key) {
+        ServerSocketChannel channel = (ServerSocketChannel) key.channel();
         SocketChannel socketChannel = null;
         try {
             socketChannel = channel.accept();
@@ -81,9 +81,9 @@ public class NioServer {
         }
     }
 
-    private static void processRead(SelectionKey key){
+    private static void processRead(SelectionKey key) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        SocketChannel socketChannel = (SocketChannel)key.channel();
+        SocketChannel socketChannel = (SocketChannel) key.channel();
 
         try {
             int read = socketChannel.read(byteBuffer);
