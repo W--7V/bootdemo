@@ -3,6 +3,10 @@ package local;
 public class TestThread {
 
     public static void main(String[] args) throws InterruptedException {
+        testThread();
+    }
+
+    public static void testThread() throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -30,6 +34,5 @@ public class TestThread {
 
         Thread.sleep(2000);
         thread.interrupt();
-
     }
 }

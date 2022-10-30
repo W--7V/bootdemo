@@ -16,6 +16,7 @@ public class ServerIdleStateTrigger extends ChannelInboundHandlerAdapter {
             IdleState state = ((IdleStateEvent) evt).state();
             if (state == IdleState.READER_IDLE) {
                 // 在规定时间内没有收到客户端的上行数据, 主动断开连接
+                System.out.println("idle event disconnect");
                 ctx.disconnect();
             }
         } else {

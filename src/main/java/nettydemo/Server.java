@@ -8,6 +8,12 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.CharsetUtil;
 
 public class Server {
     public static void main(String[] args) throws Exception {
@@ -30,7 +36,10 @@ public class Server {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             //给pipeline管道设置处理器
+                            socketChannel.pipeline().addLast(new IdleStateHandler(5,0,0));
+                            socketChannel.pipeline().addLast(new ServerIdleStateTrigger());
                             socketChannel.pipeline().addLast(new MyServerHandler());
+//                            socketChannel.pipeline().addLast(new MyServerHandler());
 //                            socketChannel.pipeline().addLast(new MyServerHandler2());
                         }
                     });//给workerGroup的EventLoop对应的管道设置处理器

@@ -1,8 +1,11 @@
 package nettydemo;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.CharsetUtil;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import io.netty.util.concurrent.ScheduledFuture;
@@ -20,13 +23,13 @@ public class Pinger extends ChannelInboundHandlerAdapter {
 
     private int baseRandom = 8;
 
-    private Channel channel;
+//    private Channel channel;
 
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        this.channel = ctx.channel();
+//        this.channel = ctx.channel();
         System.out.println("start pinger");
 
         ping(ctx.channel());
@@ -41,7 +44,7 @@ public class Pinger extends ChannelInboundHandlerAdapter {
             public void run() {
                 if (channel.isActive()) {
                     System.out.println("sending heart beat to the server...");
-                    channel.writeAndFlush(ClientIdleStateTrigger.HEART_BEAT);
+                    channel.writeAndFlush(Unpooled.copiedBuffer(ClientIdleStateTrigger.HEART_BEAT, CharsetUtil.UTF_8));
                 } else {
                     System.err.println("The connection had broken, cancel the task that will send a heart beat.");
                     channel.closeFuture();
@@ -59,6 +62,14 @@ public class Pinger extends ChannelInboundHandlerAdapter {
                 }
             }
         });
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        //接收服务端发送过来的消息
+        ByteBuf byteBuf = (ByteBuf) msg;
+        System.out.println("收到服务端" + ctx.channel().remoteAddress() + "的消息：" + byteBuf.toString(CharsetUtil.UTF_8));
+        ctx.fireChannelRead(msg);
     }
 
 

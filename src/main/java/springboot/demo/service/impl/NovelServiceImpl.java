@@ -53,6 +53,7 @@ public class NovelServiceImpl implements NovelService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String testTransactional(String query) {
         incrementById(1);
         return "ok";

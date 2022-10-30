@@ -11,7 +11,8 @@ public class MyClientHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //发送消息到服务端
         System.out.println("handler active");
-        ctx.writeAndFlush(Unpooled.copiedBuffer("歪比巴卜~茉莉~Are you good~马来西亚~", CharsetUtil.UTF_8));
+        ctx.writeAndFlush(Unpooled.copiedBuffer("i am client", CharsetUtil.UTF_8));
+        ctx.fireChannelActive();
     }
 
     @Override
@@ -19,6 +20,7 @@ public class MyClientHandler extends ChannelInboundHandlerAdapter {
         //接收服务端发送过来的消息
         ByteBuf byteBuf = (ByteBuf) msg;
         System.out.println("收到服务端" + ctx.channel().remoteAddress() + "的消息：" + byteBuf.toString(CharsetUtil.UTF_8));
+        ctx.fireChannelRead(msg);
     }
 
 

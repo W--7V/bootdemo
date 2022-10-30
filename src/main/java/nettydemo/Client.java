@@ -6,6 +6,11 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.codec.LengthFieldPrepender;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+import io.netty.util.CharsetUtil;
 
 public class Client {
     public static void main(String[] args) throws Exception {
@@ -23,7 +28,7 @@ public class Client {
                         protected void initChannel(SocketChannel ch) throws Exception {
                             //添加客户端通道的处理器
                             ch.pipeline()
-                            .addLast(new MyClientHandler())
+//                            .addLast(new MyClientHandler())
                             .addLast(new Pinger());
                         }
                     });
