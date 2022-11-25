@@ -1,20 +1,6 @@
 package local;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
@@ -40,7 +26,13 @@ public class Solution {
 //		}
 //        System.out.println(s.findTargetSumWays(new int[]{1, 1, 1, 1, 1}, 3));
 //        s.rotateTheBox(new char[][]{{'#', '.', '.', '#'}});
-        s.pathSum(s.Tree113(), 22);
+//        s.pathSum(s.Tree113(), 22);
+//        s.champagneTower(2,1,1);
+//        s.customSortString("cba", "abcd");
+//        System.out.println(s.orderOfLargestPlusSign(5, new int[][]{{4, 2}}));
+
+        System.out.println(s.zigzagLevelOrder(Util.convertArrayToTree(new Integer[]{
+                0, 2, 4, 1, null, 3, -1, 5, 1, null, 6, null, 8})));
     }
 
     static List<List<Integer>> res;
@@ -941,15 +933,167 @@ public class Solution {
         }
         return ans;
     }
+
+    public double champagneTower(int poured, int query_row, int query_glass) {
+        double[] row = {poured};
+        for (int i = 1; i <= query_row; i++) {
+            double[] nextRow = new double[i + 1];
+            for (int j = 0; j < i; j++) {
+                double volume = row[j];
+                if (volume > 1) {
+                    nextRow[j] += (volume - 1) / 2;
+                    nextRow[j + 1] += (volume - 1) / 2;
+                }
+            }
+            row = nextRow;
+        }
+        return Math.min(1, row[query_glass]);
+    }
+
+    public String customSortString(String order, String s) {
+        char[] chars = s.toCharArray();
+        int[] orderTable = new int[26];
+
+        for (int i = 0; i < order.length(); i++) {
+            orderTable[order.charAt(i) - 'a'] = i;
+        }
+
+        List<Character> charList = new ArrayList();
+        for (char c : chars) {
+            charList.add(c);
+        }
+
+        Collections.sort(charList, Comparator.comparingInt(o -> orderTable[o - 'a']));
+        StringBuilder stringBuilder = new StringBuilder();
+        charList.stream().forEach(c -> stringBuilder.append(c));
+
+        return stringBuilder.toString();
+    }
+
+    public int orderOfLargestPlusSign(int n, int[][] mines) {
+        int[][] grid = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                grid[i][j] = 1;
+            }
+        }
+
+        for (int i = 0; i < mines.length; i++) {
+            grid[mines[i][0]][mines[i][1]] = 0;
+        }
+
+//        Arrays.stream(grid).forEach(r -> Arrays.fill(r, 1));
+//        Arrays.stream(mines).forEach(r -> grid[r[0]][r[1]] = 0);
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                res = Math.max(res, dfs(grid, i, j));
+            }
+        }
+
+        return res;
+    }
+
+    public int dfs(int[][] grid, int row, int col) {
+        if (grid[row][col] == 0) {
+            return 0;
+        }
+
+        int down = move(grid, new int[]{row, col}, 1, 0);
+        int up = move(grid, new int[]{row, col}, -1, 0);
+        int right = move(grid, new int[]{row, col}, 0, 1);
+        int left = move(grid, new int[]{row, col}, 0, -1);
+
+        return Math.min(Math.min(down, up), Math.min(right, left));
+    }
+
+    public int move(int[][] grid, int[] base, int row, int col) {
+        if (base[0] < 0 || base[1] < 0 || base[0] >= grid[0].length || base[1] >= grid[0].length || grid[base[0]][base[1]] == 0) {
+            return 0;
+        }
+        base[0] += row;
+        base[1] += col;
+        return 1 + move(grid, base, row, col);
+    }
+
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) {
+            return res;
+        }
+        List<TreeNode> nextLevel = new ArrayList<>();
+        nextLevel.add(root);
+        while (nextLevel.size() > 0) {
+            nextLevel = leftOrder(res, nextLevel);
+            nextLevel = rightOrder(res, nextLevel);
+        }
+
+        return res;
+    }
+
+    public List<TreeNode> leftOrder(List<List<Integer>> res, List<TreeNode> left) {
+        LinkedList<TreeNode> nextLevel = new LinkedList<>();
+        List<Integer> currentLevel = new ArrayList<>();
+        for (TreeNode node : left) {
+            if (node.left != null) {
+                nextLevel.addFirst(node.left);
+            }
+            if (node.right != null) {
+                nextLevel.addFirst(node.right);
+            }
+            currentLevel.add(node.val);
+        }
+
+        if (currentLevel.size() > 0) {
+            res.add(currentLevel);
+        }
+        return nextLevel;
+    }
+
+    public List<TreeNode> rightOrder(List<List<Integer>> res, List<TreeNode> right) {
+        LinkedList<TreeNode> nextLevel = new LinkedList<>();
+        List<Integer> currentLevel = new ArrayList<>();
+        for (TreeNode node : right) {
+            if (node.right != null) {
+                nextLevel.addFirst(node.right);
+            }
+            if (node.left != null) {
+                nextLevel.addFirst(node.left);
+            }
+            currentLevel.add(node.val);
+        }
+
+        if (currentLevel.size() > 0) {
+            res.add(currentLevel);
+        }
+
+        return nextLevel;
+    }
+
+    public TreeNode Tree103() {
+        TreeNode root = new TreeNode(3);
+        TreeNode n1 = new TreeNode(9);
+        TreeNode n2 = new TreeNode(20);
+        TreeNode n3 = new TreeNode(15);
+        TreeNode n4 = new TreeNode(7);
+        TreeNode n5 = new TreeNode(8);
+        root.left = n1;
+        root.right = n2;
+        n1.left = n5;
+        n2.left = n3;
+        n2.right = n4;
+        return root;
+    }
 }
 
 
 class TreeNode {
-    int val;
+    Integer val;
     TreeNode left;
     TreeNode right;
 
-    TreeNode(int x) {
+    TreeNode(Integer x) {
         val = x;
     }
 }

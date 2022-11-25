@@ -47,6 +47,6 @@ public class NioWebSocketChannelInitializer extends ChannelInitializer<SocketCha
         sslEngine.setUseClientMode(false);
         sslEngine.setNeedClientAuth(false);
         // 需把SslHandler添加在第一位
-        ch.pipeline().addFirst("ssl", new SslHandler(sslEngine));
+//        ch.pipeline().addFirst("ssl", new SslHandler(sslEngine));
     }
 }
