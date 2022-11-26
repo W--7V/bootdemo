@@ -31,8 +31,10 @@ public class Solution {
 //        s.customSortString("cba", "abcd");
 //        System.out.println(s.orderOfLargestPlusSign(5, new int[][]{{4, 2}}));
 
-        System.out.println(s.zigzagLevelOrder(Util.convertArrayToTree(new Integer[]{
-                0, 2, 4, 1, null, 3, -1, 5, 1, null, 6, null, 8})));
+//        System.out.println(s.zigzagLevelOrder(Util.convertArrayToTree(new Integer[]{
+//                0, 2, 4, 1, null, 3, -1, 5, 1, null, 6, null, 8})));
+
+        s.levelOrderBottom(Util.convertArrayToTree(new Integer[]{3, 9, 20, null, null, 15, 7}));
     }
 
     static List<List<Integer>> res;
@@ -62,30 +64,6 @@ public class Solution {
         current.remove(current.size() - 1);
     }
 
-    public TreeNode Tree113() {
-        TreeNode r = new TreeNode(5);
-        TreeNode n1 = new TreeNode(4);
-        TreeNode n2 = new TreeNode(8);
-        TreeNode n3 = new TreeNode(11);
-        TreeNode n4 = new TreeNode(13);
-        TreeNode n5 = new TreeNode(4);
-        TreeNode n6 = new TreeNode(7);
-        TreeNode n7 = new TreeNode(2);
-        TreeNode n8 = new TreeNode(5);
-        TreeNode n9 = new TreeNode(1);
-        r.left = n1;
-        r.right = n2;
-        n1.left = n3;
-        n2.left = n4;
-        n2.right = n5;
-        n3.left = n6;
-        n3.right = n7;
-        n5.left = n8;
-        n5.right = n9;
-
-        return r;
-    }
-
     public char[][] rotateTheBox(char[][] box) {
 
         char[][] rotated = new char[box[0].length][box.length];
@@ -113,22 +91,6 @@ public class Solution {
         return rotated;
     }
 
-    public static TreeNode con() {
-        TreeNode root = new TreeNode(4);
-        TreeNode n1 = new TreeNode(1);
-        TreeNode n2 = new TreeNode(5);
-        TreeNode n3 = new TreeNode(2);
-        TreeNode n4 = new TreeNode(1);
-        TreeNode n5 = new TreeNode(3);
-        TreeNode n6 = new TreeNode(1);
-
-        root.left = n1;
-//		root.right = n2;
-        n1.left = n3;
-//		n1.right = n4;
-        n3.left = n5;
-        return root;
-    }
 
     public int majorityElement(int[] nums) {
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -387,21 +349,21 @@ public class Solution {
     }
 
     String s1, s2, s3;
-    Boolean num97[][];
+    Boolean nnnnum97[][];
 
     public boolean isInterleave(String s1, String s2, String s3) {
         this.s1 = s1;
         this.s2 = s2;
         this.s3 = s3;
         int k = 0, j = 0;
-        this.num97 = new Boolean[s1.length()][s2.length()];
+        this.nnnnum97 = new Boolean[s1.length()][s2.length()];
 
         return isInterleaveSub(j, k);
     }
 
     public boolean isInterleaveSub(int j, int k) {
-        if (j < s1.length() && k < s2.length() && this.num97[j][k] != null) {
-            return this.num97[j][k];
+        if (j < s1.length() && k < s2.length() && this.nnnnum97[j][k] != null) {
+            return this.nnnnum97[j][k];
         }
         if (j == s1.length() && k == s2.length() && j + k == s3.length()) {
             return true;
@@ -415,7 +377,7 @@ public class Solution {
             b2 = isInterleaveSub(j, k + 1);
         }
         if (j < s1.length() && k < s2.length()) {
-            this.num97[j][k] = b1 || b2;
+            this.nnnnum97[j][k] = b1 || b2;
         }
         return b1 || b2;
     }
@@ -1071,38 +1033,44 @@ public class Solution {
         return nextLevel;
     }
 
-    public TreeNode Tree103() {
-        TreeNode root = new TreeNode(3);
-        TreeNode n1 = new TreeNode(9);
-        TreeNode n2 = new TreeNode(20);
-        TreeNode n3 = new TreeNode(15);
-        TreeNode n4 = new TreeNode(7);
-        TreeNode n5 = new TreeNode(8);
-        root.left = n1;
-        root.right = n2;
-        n1.left = n5;
-        n2.left = n3;
-        n2.right = n4;
-        return root;
+    public List<List<Integer>> levelOrderBottom(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        Stack<List<Integer>> stack = new Stack<>();
+        if(root == null){
+            return res;
+        }
+
+        List<TreeNode> nextOrder = new LinkedList<>();
+        nextOrder.add(root);
+
+        while (nextOrder.size() > 0) {
+            nextOrder = nextLevel(stack,nextOrder);
+        }
+
+        while (!stack.isEmpty()) {
+            res.add(stack.pop());
+        }
+
+        return res;
     }
-}
 
+    public List<TreeNode> nextLevel(Stack<List<Integer>> stack, List<TreeNode> currentOrder) {
+        List<TreeNode> nextOrder = new LinkedList<>();
+        List<Integer> currentValue = new ArrayList<>();
+        for (TreeNode node:currentOrder){
+            currentValue.add(node.val);
+            if(node.left!=null){
+                nextOrder.add(node.left);
+            }
+            if(node.right!=null){
+                nextOrder.add(node.right);
+            }
+        }
 
-class TreeNode {
-    Integer val;
-    TreeNode left;
-    TreeNode right;
+        if(currentValue.size()>0){
+            stack.push(currentValue);
+        }
 
-    TreeNode(Integer x) {
-        val = x;
-    }
-}
-
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode(int x) {
-        val = x;
+        return nextOrder;
     }
 }

@@ -7,23 +7,32 @@ public class Util {
 
     public static TreeNode convertArrayToTree(Integer[] arr) {
         List<TreeNode> queue = new ArrayList();
+        // 先把根节点加入队列
         queue.add(new TreeNode(arr[0]));
-        int insertNode = 0;
-        for (int i = 1; i < arr.length; i++) {
-            TreeNode node = new TreeNode(arr[i]);
 
-            while (queue.get(insertNode).val == null) {
+        // 标记待插入子节点的树节点
+        int insertNode = 0;
+
+        // 标记该插入到左子节点还是右子节点
+        boolean isLeft = true;
+        for (int i = 1; i < arr.length; i++) {
+            TreeNode node = arr[i] == null ? null : new TreeNode(arr[i]);
+
+            // 不可能插入到空节点的子节点、跳过。。。
+            while (queue.get(insertNode) == null) {
                 insertNode += 1;
             }
-            if (queue.get(insertNode).left == null) {
+            if (isLeft) {
                 queue.get(insertNode).left = node;
-            } else if (queue.get(insertNode).right == null) {
+                isLeft = false;
+            } else {
                 queue.get(insertNode).right = node;
                 insertNode += 1;
+                isLeft = true;
             }
             queue.add(node);
         }
-        replaceNullNode(queue.get(0));
+//        replaceNullNode(queue.get(0));
 
         return queue.get(0);
     }
@@ -44,7 +53,27 @@ public class Util {
     }
 
     public static void main(String[] args) {
-        TreeNode treeNode = convertArrayToTree(new Integer[]{3, 9, 20, null, null, 15, 7});
+        TreeNode treeNode = convertArrayToTree(new Integer[]{3, 9, 20, 8, null, 15, 7, null, null, 55});
         System.out.println(treeNode);
+    }
+}
+
+
+class TreeNode {
+    Integer val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(Integer x) {
+        val = x;
+    }
+}
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
     }
 }
