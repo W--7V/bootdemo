@@ -36,7 +36,17 @@ public class Solution {
 
 //        s.levelOrderBottom(Util.convertArrayToTree(new Integer[]{3, 9, 20, null, null, 15, 7}));
 
-        s.kSmallestPairs(new int[]{1, 7, 11}, new int[]{2, 4, 6}, 3);
+//        s.kSmallestPairs(new int[]{1, 7, 11}, new int[]{2, 4, 6}, 3);
+//        int res = s.maxAreaOfIsland(new int[][]{{0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+//                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+//                {0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+//                {0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 0, 0},
+//                {0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0},
+//                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+//                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+//                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}});
+//        System.out.println(res);
+        System.out.println(s.findCircleNum(new int[][]{{1, 1, 0}, {1, 1, 0}, {0, 0, 1}}));
     }
 
     static List<List<Integer>> res;
@@ -1098,6 +1108,55 @@ public class Solution {
         }
 
         return ans;
+    }
+
+    public int maxAreaOfIsland(int[][] grid) {
+        int res = 0;
+        for (int row = 0; row < grid.length; row++) {
+            for (int col = 0; col < grid[row].length; col++) {
+                res = Math.max(res, dfs_island(grid, row, col));
+            }
+        }
+        return res;
+    }
+
+    public int dfs_island(int[][] grid, int row, int col) {
+        if (row < 0 || col < 0 || row >= grid.length || col >= grid[row].length || grid[row][col] == 0) {
+            return 0;
+        }
+
+        grid[row][col] = 0;
+
+        int down = dfs_island(grid, row + 1, col);
+        int up = dfs_island(grid, row - 1, col);
+        int right = dfs_island(grid, row, col + 1);
+        int left = dfs_island(grid, row, col - 1);
+        return 1 + down + up + right + left;
+    }
+
+    public int findCircleNum(int[][] isConnected) {
+        int res = 0;
+        for (int row = 0; row < isConnected.length; row++) {
+            for (int col = 0; col < isConnected[row].length; col++) {
+                if (isConnected[row][col] != 0) {
+                    res += 1;
+                    clear(isConnected, row);
+                }
+            }
+        }
+        return res;
+    }
+
+    public void clear(int[][] isConnected, int row) {
+        for (int col = 0; col < isConnected.length; col++) {
+            if (isConnected[row][col] != 0) {
+                isConnected[row][col] = 0;
+                if (row != col) {
+                    clear(isConnected, col);
+                }
+            }
+
+        }
     }
 
 }
