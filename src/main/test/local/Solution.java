@@ -34,7 +34,9 @@ public class Solution {
 //        System.out.println(s.zigzagLevelOrder(Util.convertArrayToTree(new Integer[]{
 //                0, 2, 4, 1, null, 3, -1, 5, 1, null, 6, null, 8})));
 
-        s.levelOrderBottom(Util.convertArrayToTree(new Integer[]{3, 9, 20, null, null, 15, 7}));
+//        s.levelOrderBottom(Util.convertArrayToTree(new Integer[]{3, 9, 20, null, null, 15, 7}));
+
+        s.kSmallestPairs(new int[]{1, 7, 11}, new int[]{2, 4, 6}, 3);
     }
 
     static List<List<Integer>> res;
@@ -1036,7 +1038,7 @@ public class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         Stack<List<Integer>> stack = new Stack<>();
-        if(root == null){
+        if (root == null) {
             return res;
         }
 
@@ -1044,7 +1046,7 @@ public class Solution {
         nextOrder.add(root);
 
         while (nextOrder.size() > 0) {
-            nextOrder = nextLevel(stack,nextOrder);
+            nextOrder = nextLevel(stack, nextOrder);
         }
 
         while (!stack.isEmpty()) {
@@ -1057,20 +1059,45 @@ public class Solution {
     public List<TreeNode> nextLevel(Stack<List<Integer>> stack, List<TreeNode> currentOrder) {
         List<TreeNode> nextOrder = new LinkedList<>();
         List<Integer> currentValue = new ArrayList<>();
-        for (TreeNode node:currentOrder){
+        for (TreeNode node : currentOrder) {
             currentValue.add(node.val);
-            if(node.left!=null){
+            if (node.left != null) {
                 nextOrder.add(node.left);
             }
-            if(node.right!=null){
+            if (node.right != null) {
                 nextOrder.add(node.right);
             }
         }
 
-        if(currentValue.size()>0){
+        if (currentValue.size() > 0) {
             stack.push(currentValue);
         }
 
         return nextOrder;
     }
+
+    public List<List<Integer>> kSmallestPairs(int[] nums1, int[] nums2, int k) {
+        PriorityQueue<int[]> pq = new PriorityQueue<>(k, (o1, o2) -> {
+            return nums1[o1[0]] + nums2[o1[1]] - nums1[o2[0]] - nums2[o2[1]];
+        });
+        List<List<Integer>> ans = new ArrayList<>();
+        int m = nums1.length;
+        int n = nums2.length;
+        for (int i = 0; i < Math.min(m, k); i++) {
+            pq.offer(new int[]{i, 0});
+        }
+        while (k-- > 0 && !pq.isEmpty()) {
+            int[] idxPair = pq.poll();
+            List<Integer> list = new ArrayList<>();
+            list.add(nums1[idxPair[0]]);
+            list.add(nums2[idxPair[1]]);
+            ans.add(list);
+            if (idxPair[1] + 1 < n) {
+                pq.offer(new int[]{idxPair[0], idxPair[1] + 1});
+            }
+        }
+
+        return ans;
+    }
+
 }
