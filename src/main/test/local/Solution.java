@@ -46,7 +46,17 @@ public class Solution {
 //                {0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
 //                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}});
 //        System.out.println(res);
-        System.out.println(s.findCircleNum(new int[][]{{1, 1, 0}, {1, 1, 0}, {0, 0, 1}}));
+//        System.out.println(s.findCircleNum(new int[][]{{1, 1, 0}, {1, 1, 0}, {0, 0, 1}}));
+        List<Integer> integers1 = Arrays.asList(-10);
+        List<Integer> integers2 = Arrays.asList(3,4);
+        List<Integer> integers3 = Arrays.asList(6,5,7);
+        List<Integer> integers4 = Arrays.asList(4,1,8,3);
+        List<List<Integer>>list = new ArrayList<>();
+        list.add(integers1);
+//        list.add(integers2);
+//        list.add(integers3);
+//        list.add(integers4);
+        System.out.println(s.minimumTotal(list));
     }
 
     static List<List<Integer>> res;
@@ -1165,6 +1175,30 @@ public class Solution {
             parent[index] = find(parent, parent[index]);
         }
         return parent[index];
+    }
+
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int res = Integer.MAX_VALUE;
+        int[][] dp = new int[triangle.size()][triangle.size()];
+        Arrays.stream(dp).forEach(r -> Arrays.fill(r, 100000));
+        dp[0][0] = triangle.get(0).get(0);
+        for (int i = 1; i < triangle.size(); i++) {
+            List<Integer> row = triangle.get(i);
+            for (int col = 0; col < row.size(); col++) {
+                if (col == 0) {
+                    dp[i][col] = row.get(col) + dp[i - 1][col];
+                } else {
+                    dp[i][col] = row.get(col) + Math.min(dp[i - 1][col], dp[i - 1][col - 1]);
+                }
+            }
+        }
+
+        for (int i = 0; i < triangle.size(); i++) {
+            res = Math.min(res, dp[triangle.size()-1][i]);
+        }
+
+        return res;
     }
 
 }
