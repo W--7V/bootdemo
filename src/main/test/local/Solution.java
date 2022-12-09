@@ -47,16 +47,18 @@ public class Solution {
 //                {0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0}});
 //        System.out.println(res);
 //        System.out.println(s.findCircleNum(new int[][]{{1, 1, 0}, {1, 1, 0}, {0, 0, 1}}));
-        List<Integer> integers1 = Arrays.asList(-10);
-        List<Integer> integers2 = Arrays.asList(3,4);
-        List<Integer> integers3 = Arrays.asList(6,5,7);
-        List<Integer> integers4 = Arrays.asList(4,1,8,3);
-        List<List<Integer>>list = new ArrayList<>();
-        list.add(integers1);
-//        list.add(integers2);
-//        list.add(integers3);
-//        list.add(integers4);
-        System.out.println(s.minimumTotal(list));
+//        List<Integer> integers1 = Arrays.asList(-10);
+//        List<Integer> integers2 = Arrays.asList(3, 4);
+//        List<Integer> integers3 = Arrays.asList(6, 5, 7);
+//        List<Integer> integers4 = Arrays.asList(4, 1, 8, 3);
+//        List<List<Integer>> list = new ArrayList<>();
+//        list.add(integers1);
+////        list.add(integers2);
+////        list.add(integers3);
+////        list.add(integers4);
+//        System.out.println(s.minimumTotal(list));
+
+        System.out.println(s.nthSuperUglyNumber(12,new int[]{2,7,13,19}));
     }
 
     static List<List<Integer>> res;
@@ -1195,10 +1197,72 @@ public class Solution {
         }
 
         for (int i = 0; i < triangle.size(); i++) {
-            res = Math.min(res, dp[triangle.size()-1][i]);
+            res = Math.min(res, dp[triangle.size() - 1][i]);
         }
 
         return res;
+    }
+
+    public List<TreeNode> generateTrees(int n) {
+        List<TreeNode> res = new ArrayList<>();
+
+        List<TreeNode> allNodes = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            TreeNode node = new TreeNode(i);
+            allNodes.add(node);
+        }
+
+        for (int i = 0; i < n; i++) {
+
+        }
+
+        return res;
+    }
+
+    public int nthUglyNumber(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+        int p2 = 1, p3 = 1, p5 = 1;
+        for (int i = 2; i <= n; i++) {
+            int num2 = dp[p2] * 2, num3 = dp[p3] * 3, num5 = dp[p5] * 5;
+            dp[i] = Math.min(Math.min(num2, num3), num5);
+            if (dp[i] == num2) {
+                p2++;
+            }
+            if (dp[i] == num3) {
+                p3++;
+            }
+            if (dp[i] == num5) {
+                p5++;
+            }
+        }
+        return dp[n];
+    }
+
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        List<Long> dp = new ArrayList<>();
+        PriorityQueue<Long> pq = new PriorityQueue<>();
+        Set<Long> set = new HashSet<>();
+        dp.add(1L);
+        Arrays.stream(primes).forEach(num -> {
+            pq.offer(num*1L);
+        });
+        int[] pointers = new int[primes.length];
+        while (dp.size() < n) {
+            long min = pq.poll();
+            if(set.contains(min)){
+                continue;
+            }
+            dp.add(min);
+            for (int i = 0; i < pointers.length; i++) {
+                if(min == primes[i]*dp.get(pointers[i])){
+                    pointers[i]++;
+                    set.add(min);
+                    pq.offer(primes[i]*dp.get(pointers[i]));
+                }
+            }
+        }
+        return dp.get(n - 1).intValue();
     }
 
 }
