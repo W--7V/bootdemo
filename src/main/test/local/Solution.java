@@ -58,7 +58,8 @@ public class Solution {
 ////        list.add(integers4);
 //        System.out.println(s.minimumTotal(list));
 
-        System.out.println(s.nthSuperUglyNumber(12,new int[]{2,7,13,19}));
+//        System.out.println(s.nthSuperUglyNumber(12, new int[]{2, 7, 13, 19}));
+        s.topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 2);
     }
 
     static List<List<Integer>> res;
@@ -1245,24 +1246,50 @@ public class Solution {
         Set<Long> set = new HashSet<>();
         dp.add(1L);
         Arrays.stream(primes).forEach(num -> {
-            pq.offer(num*1L);
+            pq.offer(num * 1L);
         });
         int[] pointers = new int[primes.length];
         while (dp.size() < n) {
             long min = pq.poll();
-            if(set.contains(min)){
+            if (set.contains(min)) {
                 continue;
             }
             dp.add(min);
             for (int i = 0; i < pointers.length; i++) {
-                if(min == primes[i]*dp.get(pointers[i])){
+                if (min == primes[i] * dp.get(pointers[i])) {
                     pointers[i]++;
                     set.add(min);
-                    pq.offer(primes[i]*dp.get(pointers[i]));
+                    pq.offer(primes[i] * dp.get(pointers[i]));
                 }
             }
         }
         return dp.get(n - 1).intValue();
+    }
+
+    public List<String> topKFrequent(String[] words, int k) {
+        List<String> res = new ArrayList<>();
+        Map<String, Integer> countMap = new HashMap<>();
+        PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<Map.Entry<String, Integer>>((o1, o2) -> {
+            if (o1.getValue().equals(o2.getValue())) {
+                return o1.getKey().compareTo(o2.getKey());
+            } else {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        for (String word : words) {
+            Integer count = countMap.getOrDefault(word, 0);
+            countMap.put(word, count + 1);
+        }
+
+        for (Map.Entry entry : countMap.entrySet()) {
+            pq.offer(entry);
+        }
+
+        for (int i = 0; i < k; i++) {
+            res.add(pq.poll().getKey());
+        }
+        return res;
     }
 
 }
