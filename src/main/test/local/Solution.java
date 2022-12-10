@@ -59,7 +59,39 @@ public class Solution {
 //        System.out.println(s.minimumTotal(list));
 
 //        System.out.println(s.nthSuperUglyNumber(12, new int[]{2, 7, 13, 19}));
-        s.topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 2);
+//        s.topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 2);
+        System.out.println(s.numDecodings("12"));
+//        System.out.println(s.numDecodings("2611"));
+    }
+
+    public int numDecodings(String s) {
+        if (s.charAt(0) == '0' || s.contains("00")) {
+            return 0;
+        }
+        int[] dp = new int[s.length() + 1];
+        dp[s.length() - 1] = 1;
+        dp[s.length()] = 1;
+
+        for (int i = s.length() - 2; i >= 0; i--) {
+            Integer sn = Integer.valueOf("" + s.charAt(i) + s.charAt(i + 1));
+            if (sn < 10 || sn.equals(10) || sn.equals(20)) {
+                dp[i] = dp[i + 1];
+            } else if (sn <= 26) {
+                dp[i] = dp[i + 1];
+                if (i + 2 >= s.length()) {
+                    dp[i] += dp[i + 2];
+                } else if (s.charAt(i + 2) != '0') {
+                    dp[i] += dp[i + 2];
+                }
+            } else {
+                if (sn % 10 == 0) {
+                    return 0;
+                }
+                dp[i] = dp[i + 1];
+            }
+        }
+
+        return dp[0];
     }
 
     static List<List<Integer>> res;
