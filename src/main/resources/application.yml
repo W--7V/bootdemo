@@ -16,10 +16,14 @@ spring:
     host: 119.91.195.175
     port: 26380
     password: bAqHqOFJHJ*Z@wIRk6bS
+    cluster:
+      nodes: 192.168.0.102:7001,192.168.0.102:7002,192.168.0.102:7003,192.168.0.102:7004,192.168.0.102:7005,192.168.0.102:7006
+      max-redirects: 6
     maxIdle: 300
     maxActive: 600
     maxWait: 1000
     testOnBorrow: true
+    timeout: 3000
 logging:
   config: classpath:logging-config.xml
 

@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.data.redis.connection.RedisClusterConfiguration;
+import org.springframework.data.redis.connection.RedisNode;
 import redis.clients.jedis.*;
 
 @Configuration
@@ -31,6 +33,15 @@ public class RedisConfig extends CachingConfigurerSupport {
 
     @Value("${spring.redis.password}")
     String password;
+
+    @Value("${spring.redis.cluster.nodes}")
+    String clusterNodes;
+
+    @Value("${spring.redis.cluster.max-redirects}")
+    int maxRedirects;
+
+    @Value("${spring.redis.timeout}")
+    Integer timeout;
 
 //	@Bean
 //	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory){
@@ -76,13 +87,27 @@ public class RedisConfig extends CachingConfigurerSupport {
     @Bean
     public JedisPool getJedis() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(10);
-        jedisPoolConfig.setMinIdle(5);
+        jedisPoolConfig.setMaxIdle(5);
+        jedisPoolConfig.setMinIdle(1);
         jedisPoolConfig.setMaxWaitMillis(1000);
         jedisPoolConfig.setTestOnBorrow(true);
         JedisPool jedisPool = new JedisPool(jedisPoolConfig, redisHost, port, Protocol.DEFAULT_TIMEOUT, password);
-//        System.out.println(jedisPool.getResource().get("1"));
         return jedisPool;
-//        return new JedisPool(jedisPoolConfig, "127.0.0.1", Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT);
+    }
+
+    @Bean
+    public JedisCluster setCluster() {
+        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
+        jedisPoolConfig.setMaxIdle(5);
+        jedisPoolConfig.setMinIdle(1);
+        jedisPoolConfig.setMaxWaitMillis(1000);
+        jedisPoolConfig.setTestOnBorrow(true);
+        String[] serverArray = clusterNodes.split(",");
+        Set<HostAndPort> nodes = new HashSet<>();
+        for (String node : serverArray) {
+            String[] hostPort = node.split(":");
+            nodes.add(new HostAndPort(hostPort[0], Integer.valueOf(hostPort[1])));
+        }
+        return new JedisCluster(nodes, timeout, timeout, maxRedirects, "foobared", jedisPoolConfig);
     }
 }
