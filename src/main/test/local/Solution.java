@@ -61,7 +61,34 @@ public class Solution {
 //        System.out.println(s.nthSuperUglyNumber(12, new int[]{2, 7, 13, 19}));
 //        s.topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 2);
 //        System.out.println(s.numDecodings("12"));
-        System.out.println(s.searchMatrix(new int[][]{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}}, 16));
+//        System.out.println(s.searchMatrix(new int[][]{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}}, 16));
+        System.out.println(s.combine(4, 2));
+    }
+
+    public List<List<Integer>> combine(int n, int k) {
+        LinkedList<Integer> path = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>(k);
+        combineSub(n, k, path, res);
+
+        return res;
+    }
+
+    public void combineSub(int n, int k, LinkedList<Integer> path, List<List<Integer>> res) {
+        if (k == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        if (n == 0) {
+            return;
+        }
+
+        path.addLast(n);
+        combineSub(n - 1, k - 1, path, res);
+        path.removeLast();
+
+        combineSub(n - 1, k, path, res);
+
     }
 
     public boolean searchMatrix(int[][] matrix, int target) {
