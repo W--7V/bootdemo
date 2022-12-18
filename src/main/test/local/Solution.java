@@ -62,7 +62,36 @@ public class Solution {
 //        s.topKFrequent(new String[]{"the", "day", "is", "sunny", "the", "the", "the", "sunny", "is", "is"}, 2);
 //        System.out.println(s.numDecodings("12"));
 //        System.out.println(s.searchMatrix(new int[][]{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}}, 16));
-        System.out.println(s.combine(4, 2));
+//        System.out.println(s.combine(4, 2));
+        System.out.println(s.subsetsWithDup(new int[]{1, 2, 2}));
+    }
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        LinkedList<Integer> path = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        res.add(new ArrayList<>());
+        dfs(0, nums, path, res, set);
+        return res;
+    }
+
+    public void dfs(int i, int[] nums, LinkedList<Integer> path, List<List<Integer>> res, Set<String> set) {
+        if (i == nums.length) {
+            return;
+        }
+
+        path.addLast(nums[i]);
+        List cur = new ArrayList<>(path);
+        StringBuilder stringBuilder = new StringBuilder();
+        cur.stream().sorted().forEach(n -> stringBuilder.append(n + ","));
+        if (!set.contains(stringBuilder.toString())) {
+            res.add(cur);
+            set.add(stringBuilder.toString());
+        }
+        dfs(i + 1, nums, path, res, set);
+        path.removeLast();
+
+        dfs(i + 1, nums, path, res, set);
     }
 
     public List<List<Integer>> combine(int n, int k) {
