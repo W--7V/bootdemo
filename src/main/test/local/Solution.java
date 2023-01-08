@@ -63,7 +63,39 @@ public class Solution {
 //        System.out.println(s.numDecodings("12"));
 //        System.out.println(s.searchMatrix(new int[][]{{1, 3, 5, 7}, {10, 11, 16, 20}, {23, 30, 34, 60}}, 16));
 //        System.out.println(s.combine(4, 2));
-        System.out.println(s.subsetsWithDup(new int[]{1, 2, 2}));
+//        System.out.println(s.subsetsWithDup(new int[]{1, 2, 2}));
+//        s.recoverTree(Util.convertArrayToTree(new Integer[]{3, 1, 4, null, null, 2}));
+        s.recoverTree(Util.convertArrayToTree(new Integer[]{1, 3, null, null, 2}));
+    }
+
+
+    public void recoverTree(TreeNode root) {
+        List<TreeNode> nodeList = new ArrayList<>();
+        inOrder(root, nodeList);
+        TreeNode node1 = null, node2 = null;
+        for (int i = 0; i < nodeList.size() - 1; i++) {
+            if (nodeList.get(i).val > nodeList.get(i + 1).val) {
+                node2 = nodeList.get(i + 1);
+                if (node1 == null) {
+                    node1 = nodeList.get(i);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        int temp = node1.val;
+        node1.val = node2.val;
+        node2.val = temp;
+    }
+
+    public void inOrder(TreeNode node, List<TreeNode> nodeList) {
+        if (node == null) {
+            return;
+        }
+        inOrder(node.left, nodeList);
+        nodeList.add(node);
+        inOrder(node.right, nodeList);
     }
 
     public List<List<Integer>> subsetsWithDup(int[] nums) {
