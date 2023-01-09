@@ -65,7 +65,33 @@ public class Solution {
 //        System.out.println(s.combine(4, 2));
 //        System.out.println(s.subsetsWithDup(new int[]{1, 2, 2}));
 //        s.recoverTree(Util.convertArrayToTree(new Integer[]{3, 1, 4, null, null, 2}));
-        s.recoverTree(Util.convertArrayToTree(new Integer[]{1, 3, null, null, 2}));
+//        s.recoverTree(Util.convertArrayToTree(new Integer[]{1, 3, null, null, 2}));
+        System.out.println(s.isSameTree(Util.convertArrayToTree(new Integer[]{10, 5, 15}), Util.convertArrayToTree(new Integer[]{10,5,null,null,15})));
+    }
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        return inOrder(p,q);
+    }
+
+    public boolean inOrder(TreeNode p, TreeNode q) {
+        if (p == null && q == null)
+            return true;
+
+        if (p == null) {
+            return false;
+        }
+        if (q == null) {
+            return false;
+        }
+        if(q.val != p.val){
+            return false;
+        }
+
+        boolean leftRes = inOrder(p.left,q.left);
+        if(!leftRes)
+            return false;
+        boolean rightRes = inOrder(p.right,q.right);
+        return rightRes;
     }
 
 
