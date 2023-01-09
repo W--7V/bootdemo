@@ -77,10 +77,7 @@ public class Solution {
         if (p == null && q == null)
             return true;
 
-        if (p == null) {
-            return false;
-        }
-        if (q == null) {
+        if (p == null || q == null) {
             return false;
         }
         if(q.val != p.val){
