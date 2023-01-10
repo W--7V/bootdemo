@@ -66,31 +66,52 @@ public class Solution {
 //        System.out.println(s.subsetsWithDup(new int[]{1, 2, 2}));
 //        s.recoverTree(Util.convertArrayToTree(new Integer[]{3, 1, 4, null, null, 2}));
 //        s.recoverTree(Util.convertArrayToTree(new Integer[]{1, 3, null, null, 2}));
-        System.out.println(s.isSameTree(Util.convertArrayToTree(new Integer[]{10, 5, 15}), Util.convertArrayToTree(new Integer[]{10,5,null,null,15})));
+//        System.out.println(s.isSameTree(Util.convertArrayToTree(new Integer[]{10, 5, 15}), Util.convertArrayToTree(new Integer[]{10, 5, null, null, 15})));
+        System.out.println(s.countNodes(Util.convertArrayToTree(new Integer[]{1, 2, 3, 4, 5, 6})));
+    }
+
+    public int countNodes(TreeNode root) {
+        int minHeight = getRightHeight(root);
+        int base = (1 << minHeight) - 1;
+        return base + getLastLevel(root, minHeight, 1);
+    }
+
+    public int getLastLevel(TreeNode node, int minHeight, int level) {
+        if (node == null) {
+            return 0;
+        }
+        int left = getRightHeight(node.left) + level;
+        if (left > minHeight) {
+            return (1 << (minHeight - level)) + getLastLevel(node.right, minHeight, level + 1);
+        } else {
+            return getLastLevel(node.left, minHeight, level + 1);
+        }
+    }
+
+    public int getRightHeight(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        return getRightHeight(node.right) + 1;
     }
 
     public boolean isSameTree(TreeNode p, TreeNode q) {
-        return inOrder(p,q);
-    }
-
-    public boolean inOrder(TreeNode p, TreeNode q) {
         if (p == null && q == null)
             return true;
 
         if (p == null || q == null) {
             return false;
         }
-        if(q.val != p.val){
+        if (q.val != p.val) {
             return false;
         }
 
-        boolean leftRes = inOrder(p.left,q.left);
-        if(!leftRes)
+        boolean leftRes = isSameTree(p.left, q.left);
+        if (!leftRes)
             return false;
-        boolean rightRes = inOrder(p.right,q.right);
+        boolean rightRes = isSameTree(p.right, q.right);
         return rightRes;
     }
-
 
     public void recoverTree(TreeNode root) {
         List<TreeNode> nodeList = new ArrayList<>();
