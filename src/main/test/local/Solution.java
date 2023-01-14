@@ -67,7 +67,111 @@ public class Solution {
 //        s.recoverTree(Util.convertArrayToTree(new Integer[]{3, 1, 4, null, null, 2}));
 //        s.recoverTree(Util.convertArrayToTree(new Integer[]{1, 3, null, null, 2}));
 //        System.out.println(s.isSameTree(Util.convertArrayToTree(new Integer[]{10, 5, 15}), Util.convertArrayToTree(new Integer[]{10, 5, null, null, 15})));
-        System.out.println(s.countNodes(Util.convertArrayToTree(new Integer[]{1, 2, 3, 4, 5, 6})));
+//        System.out.println(s.countNodes(Util.convertArrayToTree(new Integer[]{1, 2, 3, 4, 5, 6})));
+//        s.findRedundantConnection(new int[][]{{1, 2}, {1, 3}, {2, 3}});
+//        List a1 = new ArrayList(Arrays.asList("John", "johnsmith@mail.com", "john00@mail.com"));
+//        List a2 = new ArrayList(Arrays.asList("John", "johnnybravo@mail.com"));
+//        List a3 = new ArrayList(Arrays.asList("John", "johnsmith@mail.com", "john_newyork@mail.com"));
+//        List a4 = new ArrayList(Arrays.asList("Mary", "mary@mail.com"));
+
+        List a1 = new ArrayList(Arrays.asList("David","Avid0@m.co","David0@m.co","David1@m.co"));
+        List a2 = new ArrayList(Arrays.asList("David","Gvid3@m.co","David3@m.co","David4@m.co"));
+        List a3 = new ArrayList(Arrays.asList("David","David4@m.co","David5@m.co"));
+        List a4 = new ArrayList(Arrays.asList("David","David2@m.co","David3@m.co"));
+        List a5 = new ArrayList(Arrays.asList("David","David1@m.co","David2@m.co"));
+        List ac = new ArrayList(Arrays.asList(a1, a2, a3, a4,a5));
+        s.accountsMerge(ac);
+    }
+
+    public List<List<String>> accountsMerge(List<List<String>> accounts) {
+        Map<String, Integer> accountToName = new HashMap<>();
+        Map<Integer, LinkedList<String>> resMap = new HashMap<>();
+        List<List<String>> res = new ArrayList<>();
+        boolean isOverlap;
+        for (int i = 0; i < accounts.size(); i++) {
+            List<String> accountList = accounts.get(i);
+            isOverlap = false;
+            Integer parentNum = null;
+            for (int j = 1; j < accountList.size(); j++) {
+                String email = accountList.get(j);
+                parentNum = accountToName.get(email);
+                if (parentNum != null) {
+                    // 有重叠的账户
+                    isOverlap = true;
+                    break;
+                }
+            }
+
+            Set<String>emailSet = new HashSet<>();
+            if (isOverlap) {
+                // 邮箱合并到父节点
+                List<String> parentList = resMap.get(parentNum);
+                parentList.stream().forEach(e -> emailSet.add(e));
+
+                // 有重叠，邮箱编号指向父节点
+                for (int j = 1; j < accountList.size(); j++) {
+                    if (!emailSet.contains(accountList.get(j))) {
+                        parentList.add(accountList.get(j));
+                    }
+                    accountToName.put(accountList.get(j), parentNum);
+                }
+            } else {
+                // 没有重叠，当前账号加到结果中
+                LinkedList<String> aList = new LinkedList<>();
+                aList.add(accountList.get(0));
+                for (int j = 1; j < accountList.size(); j++) {
+                    if (!emailSet.contains(accountList.get(j))) {
+                        accountToName.put(accountList.get(j), i);
+                        emailSet.add(accountList.get(j));
+                        aList.add(accountList.get(j));
+                    }
+                }
+                resMap.put(i, aList);
+            }
+        }
+
+        for (Map.Entry<Integer, LinkedList<String>> entry : resMap.entrySet()) {
+            LinkedList<String> ll = entry.getValue();
+            res.add(ll);
+            String name = ll.removeFirst();
+            Collections.sort(ll);
+            ll.addFirst(name);
+        }
+
+        if (accounts.size() != res.size()) {
+            res = accountsMerge(res);
+        }
+
+        return res;
+    }
+
+    public int[] findRedundantConnection(int[][] edges) {
+        int n = edges.length;
+        int[] parent = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+        }
+        for (int i = 0; i < n; i++) {
+            int[] edge = edges[i];
+            int node1 = edge[0], node2 = edge[1];
+            if (find1(parent, node1) != find1(parent, node2)) {
+                union1(parent, node1, node2);
+            } else {
+                return edge;
+            }
+        }
+        return new int[0];
+    }
+
+    public void union1(int[] parent, int index1, int index2) {
+        parent[find1(parent, index1)] = find1(parent, index2);
+    }
+
+    public int find1(int[] parent, int index) {
+        if (parent[index] != index) {
+            parent[index] = find1(parent, parent[index]);
+        }
+        return parent[index];
     }
 
     public int countNodes(TreeNode root) {
