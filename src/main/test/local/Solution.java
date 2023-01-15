@@ -84,66 +84,50 @@ public class Solution {
     }
 
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
-        Map<String, Integer> accountToName = new HashMap<>();
-        Map<Integer, LinkedList<String>> resMap = new HashMap<>();
-        List<List<String>> res = new ArrayList<>();
-        boolean isOverlap;
-        for (int i = 0; i < accounts.size(); i++) {
-            List<String> accountList = accounts.get(i);
-            isOverlap = false;
-            Integer parentNum = null;
-            for (int j = 1; j < accountList.size(); j++) {
-                String email = accountList.get(j);
-                parentNum = accountToName.get(email);
-                if (parentNum != null) {
-                    // 有重叠的账户
-                    isOverlap = true;
-                    break;
+        Map<String, Integer> emailToIndex = new HashMap<String, Integer>();
+        Map<String, String> emailToName = new HashMap<String, String>();
+        int emailsCount = 0;
+        for (List<String> account : accounts) {
+            String name = account.get(0);
+            int size = account.size();
+            for (int i = 1; i < size; i++) {
+                String email = account.get(i);
+                if (!emailToIndex.containsKey(email)) {
+                    emailToIndex.put(email, emailsCount++);
+                    emailToName.put(email, name);
                 }
             }
-
-            Set<String>emailSet = new HashSet<>();
-            if (isOverlap) {
-                // 邮箱合并到父节点
-                List<String> parentList = resMap.get(parentNum);
-                parentList.stream().forEach(e -> emailSet.add(e));
-
-                // 有重叠，邮箱编号指向父节点
-                for (int j = 1; j < accountList.size(); j++) {
-                    if (!emailSet.contains(accountList.get(j))) {
-                        parentList.add(accountList.get(j));
-                    }
-                    accountToName.put(accountList.get(j), parentNum);
-                }
-            } else {
-                // 没有重叠，当前账号加到结果中
-                LinkedList<String> aList = new LinkedList<>();
-                aList.add(accountList.get(0));
-                for (int j = 1; j < accountList.size(); j++) {
-                    if (!emailSet.contains(accountList.get(j))) {
-                        accountToName.put(accountList.get(j), i);
-                        emailSet.add(accountList.get(j));
-                        aList.add(accountList.get(j));
-                    }
-                }
-                resMap.put(i, aList);
+        }
+        UnionFind uf = new UnionFind(emailsCount);
+        for (List<String> account : accounts) {
+            String firstEmail = account.get(1);
+            int firstIndex = emailToIndex.get(firstEmail);
+            int size = account.size();
+            for (int i = 2; i < size; i++) {
+                String nextEmail = account.get(i);
+                int nextIndex = emailToIndex.get(nextEmail);
+                uf.union(firstIndex, nextIndex);
             }
         }
-
-        for (Map.Entry<Integer, LinkedList<String>> entry : resMap.entrySet()) {
-            LinkedList<String> ll = entry.getValue();
-            res.add(ll);
-            String name = ll.removeFirst();
-            Collections.sort(ll);
-            ll.addFirst(name);
+        Map<Integer, List<String>> indexToEmails = new HashMap<Integer, List<String>>();
+        for (String email : emailToIndex.keySet()) {
+            int index = uf.find(emailToIndex.get(email));
+            List<String> account = indexToEmails.getOrDefault(index, new ArrayList<String>());
+            account.add(email);
+            indexToEmails.put(index, account);
         }
-
-        if (accounts.size() != res.size()) {
-            res = accountsMerge(res);
+        List<List<String>> merged = new ArrayList<List<String>>();
+        for (List<String> emails : indexToEmails.values()) {
+            Collections.sort(emails);
+            String name = emailToName.get(emails.get(0));
+            List<String> account = new ArrayList<String>();
+            account.add(name);
+            account.addAll(emails);
+            merged.add(account);
         }
-
-        return res;
+        return merged;
     }
+
 
     public int[] findRedundantConnection(int[][] edges) {
         int n = edges.length;
@@ -1595,4 +1579,26 @@ public class Solution {
         return res;
     }
 
+}
+
+class UnionFind {
+    int[] parent;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+        }
+    }
+
+    public void union(int index1, int index2) {
+        parent[find(index2)] = find(index1);
+    }
+
+    public int find(int index) {
+        if (parent[index] != index) {
+            parent[index] = find(parent[index]);
+        }
+        return parent[index];
+    }
 }
