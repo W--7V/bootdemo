@@ -23,7 +23,7 @@ public class CacheController {
     @Autowired
     JedisPool jedisPool;
 
-    @Autowired
+//    @Autowired
     JedisCluster jedisCluster;
 
     @Autowired

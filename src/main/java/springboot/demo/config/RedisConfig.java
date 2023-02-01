@@ -95,7 +95,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         return jedisPool;
     }
 
-    @Bean
+//    @Bean
     public JedisCluster setCluster() {
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(5);
