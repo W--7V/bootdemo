@@ -23,6 +23,9 @@ import springboot.demo.dao.NovelMapper;
 import springboot.demo.service.NovelService;
 import springboot.demo.service.WebSocket;
 import springboot.demo.system.websocketByNetty.ChannelSupervise;
+import springboot.demo.util.CommandUtil;
+
+import java.io.IOException;
 
 @RestController
 public class DemoController {
@@ -125,6 +128,16 @@ public class DemoController {
 	@RequestMapping("/getLoginId")
 	public String getLoginId(){
 		return StpUtil.getLoginId().toString();
+	}
+
+	@RequestMapping("/shutdown")
+	public void shutdown(){
+		try {
+			LOGGER.info("shutdown the server");
+			CommandUtil.run("poweroff");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
