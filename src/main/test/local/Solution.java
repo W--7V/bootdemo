@@ -74,13 +74,28 @@ public class Solution {
 //        List a3 = new ArrayList(Arrays.asList("John", "johnsmith@mail.com", "john_newyork@mail.com"));
 //        List a4 = new ArrayList(Arrays.asList("Mary", "mary@mail.com"));
 
-        List a1 = new ArrayList(Arrays.asList("David","Avid0@m.co","David0@m.co","David1@m.co"));
-        List a2 = new ArrayList(Arrays.asList("David","Gvid3@m.co","David3@m.co","David4@m.co"));
-        List a3 = new ArrayList(Arrays.asList("David","David4@m.co","David5@m.co"));
-        List a4 = new ArrayList(Arrays.asList("David","David2@m.co","David3@m.co"));
-        List a5 = new ArrayList(Arrays.asList("David","David1@m.co","David2@m.co"));
-        List ac = new ArrayList(Arrays.asList(a1, a2, a3, a4,a5));
-        s.accountsMerge(ac);
+//        List a1 = new ArrayList(Arrays.asList("David", "Avid0@m.co", "David0@m.co", "David1@m.co"));
+//        List a2 = new ArrayList(Arrays.asList("David", "Gvid3@m.co", "David3@m.co", "David4@m.co"));
+//        List a3 = new ArrayList(Arrays.asList("David", "David4@m.co", "David5@m.co"));
+//        List a4 = new ArrayList(Arrays.asList("David", "David2@m.co", "David3@m.co"));
+//        List a5 = new ArrayList(Arrays.asList("David", "David1@m.co", "David2@m.co"));
+//        List ac = new ArrayList(Arrays.asList(a1, a2, a3, a4, a5));
+//        s.accountsMerge(ac);
+
+        System.out.println(s.lengthOfLastWord("   fly me   to   the moon  "));
+    }
+
+    public int lengthOfLastWord(String s) {
+        s = s.trim();
+        int res = 0;
+        for (int i = s.length() - 1; i >= 0; i--) {
+            char c = s.charAt(i);
+            if (c == ' ') {
+                break;
+            }
+            res++;
+        }
+        return res;
     }
 
     public List<List<String>> accountsMerge(List<List<String>> accounts) {
