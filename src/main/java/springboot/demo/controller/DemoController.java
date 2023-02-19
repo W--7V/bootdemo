@@ -46,7 +46,7 @@ public class DemoController {
 
 	@GetMapping("/testhello")
 	public String testhello(HttpServletRequest request, HttpServletResponse response, String helloparam) {
-		LOGGER.info("testhello");
+        LOGGER.info("testhello:{}", helloparam);
 //		HttpSession session = request.getSession();
 //		int maxInactiveInterval = session.getMaxInactiveInterval();
 //		ClassPathXmlApplicationContext c = new ClassPathXmlApplicationContext("");

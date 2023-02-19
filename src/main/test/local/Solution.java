@@ -85,6 +85,26 @@ public class Solution {
         System.out.println(s.lengthOfLastWord("   fly me   to   the moon  "));
     }
 
+    public List<Integer> majorityElement(int[] nums) {
+        int count = nums.length / 3;
+        List<Integer> res = new LinkedList<>();
+        Map<Integer, Integer> map = new HashMap();
+        for (int n : nums) {
+            if (map.containsKey(n)) {
+                map.put(n, map.get(n) + 1);
+            } else {
+                map.put(n, 1);
+            }
+        }
+
+        for (Map.Entry<Integer, Integer> e : map.entrySet()) {
+            if (e.getValue() > count) {
+                res.add(e.getKey());
+            }
+        }
+        return res;
+    }
+
     public int lengthOfLastWord(String s) {
         s = s.trim();
         int res = 0;
@@ -419,7 +439,7 @@ public class Solution {
     }
 
 
-    public int majorityElement(int[] nums) {
+    public int majorityElements(int[] nums) {
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
         for (int i : nums) {
             Integer n = map.get(i);
